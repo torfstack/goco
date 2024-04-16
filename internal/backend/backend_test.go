@@ -1,8 +1,8 @@
 package backend
 
 import (
+	"github.com/stretchr/testify/assert"
 	"goco/internal/quantum"
-	"reflect"
 	"testing"
 )
 
@@ -37,12 +37,43 @@ func TestLinearAlgebraBackend_Simulate(t *testing.T) {
 			},
 			[]float64{0, 1},
 		},
+		{
+			"two qbits, second into X gate",
+			func() *quantum.System {
+				s := quantum.NewSystem(2)
+				s.X(1)
+				return &s
+			},
+			[]float64{0, 1, 0, 0},
+		},
+		{
+			"one qbit into H gate",
+			func() *quantum.System {
+				s := quantum.NewSystem(1)
+				s.H(0)
+				return &s
+			},
+			[]float64{0.5, 0.5},
+		},
+		{
+			"one qbit into X and H gates",
+			func() *quantum.System {
+				s := quantum.NewSystem(1)
+				s.X(0)
+				s.H(0)
+				return &s
+			},
+			[]float64{0.5, 0.5},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			b := NewLinearAlgebraBackend(tt.fields())
-			if got := b.Simulate(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Simulate() = %v, want %v", got, tt.want)
+			got := b.Simulate()
+
+			for i, v := range got {
+				assert.InDeltaf(t, tt.want[i], v, 0.0001,
+					"Simulate(): expected %f, got %f (in arrays expected %v, got %v)", tt.want[i], v, tt.want, got)
 			}
 		})
 	}
