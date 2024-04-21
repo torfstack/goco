@@ -1,16 +1,16 @@
-package goco
+package backend
 
 import (
-	"goco/pkg/matrix"
-	goco "goco/pkg/quantum"
+	"github.com/torfstack/goco/matrix"
+	"github.com/torfstack/goco/quantum"
 	"math"
 )
 
 type LinearAlgebraBackend struct {
-	system *goco.System
+	system *quantum.System
 }
 
-func NewLinearAlgebraBackend(system *goco.System) *LinearAlgebraBackend {
+func NewLinearAlgebraBackend(system *quantum.System) *LinearAlgebraBackend {
 	return &LinearAlgebraBackend{
 		system: system,
 	}
@@ -25,11 +25,11 @@ func (b *LinearAlgebraBackend) Simulate() []float64 {
 
 	for _, gate := range b.system.Gates {
 		switch gate.Type {
-		case goco.GateTypeX:
+		case quantum.GateTypeX:
 			state = matrix.Multiply(b.ConstructXGate(gate.Qbits[0]), state)
-		case goco.GateTypeH:
+		case quantum.GateTypeH:
 			state = matrix.Multiply(b.ConstructHadamardGate(gate.Qbits[0]), state)
-		case goco.GateTypeCNOT:
+		case quantum.GateTypeCNOT:
 			state = matrix.Multiply(b.ConstructCNOTGate(gate.Qbits[0], gate.Qbits[1]), state)
 		}
 	}

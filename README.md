@@ -1,4 +1,4 @@
-## goco
+# goco
 
 `goco` is a library to construct quantum circuits in Go. It is inspired by Qiskit, a quantum computing library in Python.
 Quantum circuits can be constructed with an unlimited number of qubits and gates. The library also supports the simulation of quantum circuits.

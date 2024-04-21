@@ -1,4 +1,4 @@
-module goco
+module github.com/torfstack/goco
 
 go 1.22
 
