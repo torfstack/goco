@@ -1,37 +1,37 @@
-package backend
+package goco
 
 import (
 	"github.com/stretchr/testify/assert"
-	"goco/internal/quantum"
+	goco "goco/pkg/quantum"
 	"testing"
 )
 
 func TestLinearAlgebraBackend_Simulate(t *testing.T) {
 	tests := []struct {
 		name   string
-		fields func() *quantum.System
+		fields func() *goco.System
 		want   []float64
 	}{
 		{
 			"one qbit into no gates",
-			func() *quantum.System {
-				s := quantum.NewSystem(1)
+			func() *goco.System {
+				s := goco.NewSystem(1)
 				return &s
 			},
 			[]float64{1, 0},
 		},
 		{
 			"two qbits into no gates",
-			func() *quantum.System {
-				s := quantum.NewSystem(2)
+			func() *goco.System {
+				s := goco.NewSystem(2)
 				return &s
 			},
 			[]float64{1, 0, 0, 0},
 		},
 		{
 			"one qbit into X gate",
-			func() *quantum.System {
-				s := quantum.NewSystem(1)
+			func() *goco.System {
+				s := goco.NewSystem(1)
 				s.X(0)
 				return &s
 			},
@@ -39,8 +39,8 @@ func TestLinearAlgebraBackend_Simulate(t *testing.T) {
 		},
 		{
 			"two qbits, second into X gate",
-			func() *quantum.System {
-				s := quantum.NewSystem(2)
+			func() *goco.System {
+				s := goco.NewSystem(2)
 				s.X(1)
 				return &s
 			},
@@ -48,8 +48,8 @@ func TestLinearAlgebraBackend_Simulate(t *testing.T) {
 		},
 		{
 			"one qbit into H gate",
-			func() *quantum.System {
-				s := quantum.NewSystem(1)
+			func() *goco.System {
+				s := goco.NewSystem(1)
 				s.H(0)
 				return &s
 			},
@@ -57,8 +57,8 @@ func TestLinearAlgebraBackend_Simulate(t *testing.T) {
 		},
 		{
 			"one qbit into X and H gates",
-			func() *quantum.System {
-				s := quantum.NewSystem(1)
+			func() *goco.System {
+				s := goco.NewSystem(1)
 				s.X(0)
 				s.H(0)
 				return &s
@@ -67,8 +67,8 @@ func TestLinearAlgebraBackend_Simulate(t *testing.T) {
 		},
 		{
 			"two qbits, first into X and second into H gate",
-			func() *quantum.System {
-				s := quantum.NewSystem(2)
+			func() *goco.System {
+				s := goco.NewSystem(2)
 				s.X(0)
 				s.H(1)
 				return &s
@@ -77,8 +77,8 @@ func TestLinearAlgebraBackend_Simulate(t *testing.T) {
 		},
 		{
 			"two qbits, create EPR pair",
-			func() *quantum.System {
-				s := quantum.NewSystem(2)
+			func() *goco.System {
+				s := goco.NewSystem(2)
 				s.H(0)
 				s.CNOT(0, 1)
 				return &s
@@ -87,8 +87,8 @@ func TestLinearAlgebraBackend_Simulate(t *testing.T) {
 		},
 		{
 			"three qbits, create EPR pair on first and third qbits",
-			func() *quantum.System {
-				s := quantum.NewSystem(3)
+			func() *goco.System {
+				s := goco.NewSystem(3)
 				s.H(0)
 				s.CNOT(0, 2)
 				return &s

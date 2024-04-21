@@ -1,4 +1,4 @@
-package quantum
+package goco
 
 import (
 	"errors"
