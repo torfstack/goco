@@ -16,25 +16,26 @@ go get github.com/torfstack/goco
 package main
 
 import (
-    "fmt"
-    "github.com/torfstack/goco"
+	"fmt"
+	"github.com/torfstack/goco/backend"
+	"github.com/torfstack/goco/quantum"
 )
 
 func main() {
-    // Create a quantum circuit with 2 qubits
-    qs := goco.NewSystem(2) // 2 qubits
+	// Create a quantum circuit with 2 qubits
+	qs := quantum.NewSystem(2) // 2 qubits
 
-    // Apply a Hadamard gate to the first qubit
-    qs.H(0)
+	// Apply a Hadamard gate to the first qubit
+	qs.H(0)
 
-    // Apply a CNOT gate to the first and second qubits
-    qs.CNOT(0, 1)
+	// Apply a CNOT gate to the first and second qubits
+	qs.CNOT(0, 1)
 
-    // Simulate the circuit
-    b := goco.NewLinearAlgebraBackend(qs)
-    result := b.Simulate()
+	// Simulate the circuit
+	b := backend.NewLinearAlgebraBackend(&qs)
+	result := b.Simulate()
 
-    // Print the result: [0.5, 0, 0, 0.5]
-    fmt.Println(result)
+	// Print the result: [0.5, 0, 0, 0.5]
+	fmt.Println(result)
 }
 ```
