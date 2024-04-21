@@ -16,6 +16,7 @@ func NewLinearAlgebraBackend(system *quantum.System) *LinearAlgebraBackend {
 	}
 }
 
+// Simulate returns the probability distribution of the system over all qubits
 func (b *LinearAlgebraBackend) Simulate() []float64 {
 	n := b.system.NumberOfQbits
 	state := ZeroState()
