@@ -1,6 +1,7 @@
 package matrix
 
 import (
+	"fmt"
 	"math"
 )
 
@@ -10,7 +11,8 @@ type ComplexNumber struct {
 }
 
 func NewComplexNumber(real, imaginary float64) ComplexNumber {
-	return ComplexNumber{Real: real, Imaginary: imaginary}
+	c := ComplexNumber{Real: real, Imaginary: imaginary}
+	return c
 }
 
 func (a ComplexNumber) Add(b ComplexNumber) ComplexNumber {
@@ -43,7 +45,8 @@ func NewMatrix(rows, columns int) *Matrix {
 	for i := range data {
 		data[i] = make([]ComplexNumber, columns)
 	}
-	return &Matrix{Rows: rows, Columns: columns, Data: data}
+	m := &Matrix{Rows: rows, Columns: columns, Data: data}
+	return m
 }
 
 func Tensor(a, b *Matrix) *Matrix {
@@ -70,6 +73,28 @@ func Multiply(a, b *Matrix) *Matrix {
 			for k := 0; k < a.Columns; k++ {
 				result.Data[i][j] = result.Data[i][j].Add(a.Data[i][k].Mul(b.Data[k][j]))
 			}
+		}
+	}
+	return result
+}
+
+//lint:ignore
+func (a ComplexNumber) String() string {
+	return fmt.Sprintf("%f + %fi", a.Real, a.Imaginary)
+}
+
+//lint:ignore
+func (m Matrix) String() string {
+	result := ""
+	for i := 0; i < m.Rows; i++ {
+		for j := 0; j < m.Columns; j++ {
+			result += m.Data[i][j].String()
+			if j < m.Columns-1 {
+				result += " "
+			}
+		}
+		if i < m.Rows-1 {
+			result += "\n"
 		}
 	}
 	return result

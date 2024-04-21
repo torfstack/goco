@@ -29,6 +29,8 @@ func (b *LinearAlgebraBackend) Simulate() []float64 {
 			state = matrix.Multiply(b.ConstructXGate(gate.Qbits[0]), state)
 		case quantum.GateTypeH:
 			state = matrix.Multiply(b.ConstructHadamardGate(gate.Qbits[0]), state)
+		case quantum.GateTypeCNOT:
+			state = matrix.Multiply(b.ConstructCNOTGate(gate.Qbits[0], gate.Qbits[1]), state)
 		}
 	}
 
@@ -69,7 +71,33 @@ func (b *LinearAlgebraBackend) ConstructHadamardGate(target int) *matrix.Matrix 
 		}
 	}
 	return m
+}
 
+func (b *LinearAlgebraBackend) ConstructCNOTGate(control, target int) *matrix.Matrix {
+	s := b.system
+	n := s.NumberOfQbits
+	m := matrix.NewMatrix(1<<n, 1<<n)
+	for i := 0; i < 1<<n; i++ {
+		for j := 0; j < 1<<n; j++ {
+			stateI, errI := s.StateOf(i)
+			stateJ, errJ := s.StateOf(j)
+			if errI != nil || errJ != nil {
+				panic("ConstructCNOTGate: called with invalid parameters " +
+					"(control or target bits are most likely out of range")
+			}
+			if i == j && s.ValueOfBitInState(control, stateJ) == 0 {
+				m.Data[i][j] = matrix.NewComplexNumber(1, 0)
+			} else if s.ValueOfBitInState(control, stateJ) == 1 &&
+				s.ValueOfBitInState(control, stateI) == 1 &&
+				s.ValueOfBitInState(target, stateJ) != s.ValueOfBitInState(target, stateI) &&
+				s.DoStatesOnlyDifferInPosition(target, stateI, stateJ) {
+				m.Data[i][j] = matrix.NewComplexNumber(1, 0)
+			} else {
+				m.Data[i][j] = matrix.NewComplexNumber(0, 0)
+			}
+		}
+	}
+	return m
 }
 
 func XGate() *matrix.Matrix {
