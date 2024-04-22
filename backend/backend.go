@@ -30,6 +30,8 @@ func (b *LinearAlgebraBackend) Simulate() []float64 {
 			state = matrix.Multiply(b.ConstructXGate(gate.Qbits[0]), state)
 		case quantum.GateTypeY:
 			state = matrix.Multiply(b.ConstructYGate(gate.Qbits[0]), state)
+		case quantum.GateTypeZ:
+			state = matrix.Multiply(b.ConstructZGate(gate.Qbits[0]), state)
 		case quantum.GateTypeH:
 			state = matrix.Multiply(b.ConstructHadamardGate(gate.Qbits[0]), state)
 		case quantum.GateTypeCNOT:
@@ -116,6 +118,19 @@ func (b *LinearAlgebraBackend) ConstructYGate(i int) *matrix.Matrix {
 	return m
 }
 
+func (b *LinearAlgebraBackend) ConstructZGate(i int) *matrix.Matrix {
+	m := matrix.NewMatrix(1, 1)
+	m.Data[0][0] = matrix.NewComplexNumber(1, 0)
+	for j := range b.system.NumberOfQbits {
+		if j == i {
+			m = matrix.Tensor(m, ZGate())
+		} else {
+			m = matrix.Tensor(m, IdentityGate())
+		}
+	}
+	return m
+}
+
 func XGate() *matrix.Matrix {
 	m := matrix.NewMatrix(2, 2)
 	m.Data[0][0] = matrix.NewComplexNumber(0, 0)
@@ -131,6 +146,15 @@ func YGate() *matrix.Matrix {
 	m.Data[0][1] = matrix.NewComplexNumber(0, -1)
 	m.Data[1][0] = matrix.NewComplexNumber(0, 1)
 	m.Data[1][1] = matrix.NewComplexNumber(0, 0)
+	return m
+}
+
+func ZGate() *matrix.Matrix {
+	m := matrix.NewMatrix(2, 2)
+	m.Data[0][0] = matrix.NewComplexNumber(1, 0)
+	m.Data[0][1] = matrix.NewComplexNumber(0, 0)
+	m.Data[1][0] = matrix.NewComplexNumber(0, 0)
+	m.Data[1][1] = matrix.NewComplexNumber(-1, 0)
 	return m
 }
 

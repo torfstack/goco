@@ -42,10 +42,29 @@ func TestLinearAlgebraBackend_Simulate(t *testing.T) {
 			"one qbit into Y gate",
 			func() *quantum.System {
 				s := quantum.NewSystem(1)
-				s.X(0)
+				s.Y(0)
 				return &s
 			},
 			[]float64{0, 1},
+		},
+		{
+			"one qbit into X and then Z gate",
+			func() *quantum.System {
+				s := quantum.NewSystem(1)
+				s.X(0)
+				s.Z(0)
+				return &s
+			},
+			[]float64{0, 1},
+		},
+		{
+			"one qbit into Z gate",
+			func() *quantum.System {
+				s := quantum.NewSystem(1)
+				s.Z(0)
+				return &s
+			},
+			[]float64{1, 0},
 		},
 		{
 			"two qbits, second into X gate",
